@@ -1,5 +1,6 @@
 [package]
 name = "now-cli"
+description = "An unofficial Now client written in Rust"
 version = "0.1.0"
 authors = ["Dan Reeves <hey@danreev.es>"]
 edition = "2018"
