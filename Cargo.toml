@@ -3,6 +3,10 @@ name = "now-cli"
 version = "0.1.0"
 authors = ["Dan Reeves <hey@danreev.es>"]
 edition = "2018"
+repository = "https://github.com/danreeves/now-cli"
+license = "MIT"
+license-file = "LICENSE"
+readme = "README.md"
 
 [dependencies]
 serde_json = "1.0.28"
@@ -20,3 +24,6 @@ mkdirp = "0.1.0"
 [[bin]]
 name="now"
 path="src/main.rs"
+
+[badges]
+travis-ci = { repository = "danreeves/now-cli", branch = "master" }

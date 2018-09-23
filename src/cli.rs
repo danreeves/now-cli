@@ -1,7 +1,7 @@
 #[derive(StructOpt, Debug)]
 #[structopt(
     name = "▲ now",
-    about = "Unofficial Now client written in Rust"
+    about = "An unofficial Now client written in Rust"
 )]
 pub struct Cli {
     #[structopt(subcommand)]
