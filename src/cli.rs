@@ -11,14 +11,14 @@ pub struct Cli {
 #[derive(StructOpt, Debug)]
 pub enum Command {
     #[structopt(name = "login")]
-    /// Log in to your now account
+    /// Authenticate with Now
     Login,
 
     #[structopt(name = "logout")]
-    /// Log out of your now account
+    /// Delete the authentication token
     Logout,
 
     #[structopt(name = "whoami")]
-    /// Display information about the currently authorized now account
+    /// Print out who is authenticated
     Whoami,
 }
