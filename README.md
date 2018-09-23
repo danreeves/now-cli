@@ -30,10 +30,12 @@ SUBCOMMANDS:
     whoami    Print out who is authenticated
 ```
 
+## Features
+
+This CLI is in development, to see which features are avaiable see the [TODO file](./TODO.md), or install the CLI and run `now --help`.
+
 ## License
 [MIT © Dan Reeves](./LICENSE)
-
-
 
 [1]: https://img.shields.io/crates/v/now-cli.svg?style=flat-square
 [2]: https://crates.io/crates/now-cli
@@ -43,4 +45,3 @@ SUBCOMMANDS:
 [6]: https://docs.rs/now-cli
 [7]: https://img.shields.io/crates/l/now-cli.svg?style=flat-square
 [8]: ./LICENSE
-
