@@ -3,7 +3,7 @@
 - [x] login
 - [x] logout
 - [x] whoami
-- [ ] list
+- [x] list
 - [ ] deploy
 - [ ] delete
 - [ ] alias
