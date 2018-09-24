@@ -90,7 +90,7 @@ impl UserData {
     }
 
     fn is_logged_in(&self) -> Result<bool, Error> {
-        if let Some(data) = &self.data {
+        if let Some(_data) = &self.data {
             return Ok(true);
         }
         println!("▲ You're not logged in");

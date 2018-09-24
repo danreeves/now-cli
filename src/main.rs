@@ -8,6 +8,7 @@ extern crate failure;
 extern crate tabular;
 extern crate rprompt;
 
+#[allow(non_camel_case_types)]
 mod api;
 mod cli;
 mod handlers;
