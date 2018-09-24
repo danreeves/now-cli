@@ -21,4 +21,8 @@ pub enum Command {
     #[structopt(name = "whoami")]
     /// Print out who is authenticated
     Whoami,
+
+    #[structopt(name = "list")]
+    /// List all deployments under the current account
+    List,
 }

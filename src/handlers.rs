@@ -1,3 +1,4 @@
+use super::api;
 use console::style;
 use dialoguer::{Confirmation, Input};
 use directories::ProjectDirs;
@@ -7,23 +8,24 @@ use serde_json::{from_str, to_string};
 use std::fs::{remove_file, File};
 use std::io::prelude::*;
 use std::path::{Path, PathBuf};
+use tabular::Table;
 
 #[derive(Debug, Serialize, Deserialize)]
-pub struct AuthFile {
+pub struct Auth {
     pub email: String,
     pub token: String,
 }
 
 #[derive(Debug)]
 pub struct UserData {
-    pub data: Option<AuthFile>,
+    pub data: Option<Auth>,
     project_dir: ProjectDirs,
 }
 
 impl UserData {
     fn new(email: String, token: String) -> UserData {
         let project_dir = UserData::get_project_dir();
-        let data = AuthFile { email, token };
+        let data = Auth { email, token };
         return UserData {
             data: Some(data),
             project_dir,
@@ -64,7 +66,7 @@ impl UserData {
         if let Ok(mut file) = File::open(&filepath) {
             let mut contents = String::new();
             file.read_to_string(&mut contents)?;
-            let json: AuthFile = from_str(&contents)?;
+            let json: Auth = from_str(&contents)?;
             self.data = Some(json);
         }
         Ok(())
@@ -86,13 +88,21 @@ impl UserData {
         remove_file(&filepath)?;
         Ok(())
     }
+
+    fn is_logged_in(&self) -> Result<bool, Error> {
+        if let Some(data) = &self.data {
+            return Ok(true);
+        }
+        println!("▲ You're not logged in");
+        bail!("Not logged in")
+    }
 }
 
 pub fn login() -> Result<(), Error> {
     println!("▲ Authenticate with {}", style("Now").bold());
     let email = Input::new(&format!("{}", style("Email").bold())).interact()?;
 
-    let login_request = now_cli::request_login(&email)?;
+    let login_request = api::request_login(&email)?;
 
     println!(
         "An email has been sent to {} with the security code {}.",
@@ -104,7 +114,7 @@ pub fn login() -> Result<(), Error> {
         .interact()
         .unwrap_or(false)
     {
-        let auth_token = now_cli::verify_login(&email, &login_request.token)?;
+        let auth_token = api::verify_login(&email, &login_request.token)?;
 
         if auth_token.error.is_some() {
             // TODO return error
@@ -138,10 +148,33 @@ pub fn logout() -> Result<(), Error> {
 
 pub fn whoami() -> Result<(), Error> {
     let user_data = UserData::from_fs();
-    if let Some(data) = &user_data.data {
-        println!("▲ Logged in as {}", style(&data.email).bold());
-    } else {
-        println!("▲ You're not logged in");
+    if user_data.is_logged_in()? {
+        let email = user_data.data.unwrap().email;
+        println!("▲ Logged in as {}", style(email).bold());
+    }
+    Ok(())
+}
+
+pub fn list() -> Result<(), Error> {
+    let user_data = UserData::from_fs();
+    if user_data.is_logged_in()? {
+        let deployments = api::get_list(user_data.data.unwrap())?;
+        if deployments.len() > 0 {
+            let mut table = Table::new(" {:>}  {:<}  {:<}  {:<} ");
+            table.add_heading(format!(" ▲ {} ", style("Deployments").bold()));
+            table.add_row(row!["Name", "Type", "State", "URL"]);
+            for deployment in deployments {
+                table.add_row(row![
+                    deployment.name,
+                    deployment.deployment_type,
+                    deployment.state.unwrap_or(api::DeploymentState::READY),
+                    deployment.url
+                ]);
+            }
+            println!("{}", table);
+        } else {
+            println!("▲ No deployments found");
+        }
     }
     Ok(())
 }

@@ -21,6 +21,7 @@ console = "0.6.2"
 failure = "0.1.2"
 directories = "1.0.1"
 mkdirp = "0.1.0"
+tabular = "0.1.2"
 
 [[bin]]
 name="now"

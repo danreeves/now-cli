@@ -1,12 +1,14 @@
-#![feature(try_blocks)]
-
 #[macro_use]
 extern crate structopt;
 #[macro_use]
 extern crate serde_derive;
+#[macro_use]
 extern crate failure;
+#[macro_use]
+extern crate tabular;
 extern crate rprompt;
 
+mod api;
 mod cli;
 mod handlers;
 
@@ -20,6 +22,7 @@ fn main() {
         Command::Login => handlers::login(),
         Command::Logout => handlers::logout(),
         Command::Whoami => handlers::whoami(),
+        Command::List => handlers::list(),
         _ => unimplemented!(),
     };
 
