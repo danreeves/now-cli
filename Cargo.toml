@@ -6,7 +6,6 @@ authors = ["Dan Reeves <hey@danreev.es>"]
 edition = "2018"
 repository = "https://github.com/danreeves/now-cli"
 license = "MIT"
-license-file = "LICENSE"
 readme = "README.md"
 
 [dependencies]
