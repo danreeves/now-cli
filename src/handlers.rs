@@ -1,14 +1,16 @@
+use std::time::{SystemTime, UNIX_EPOCH};
 use super::api;
 use console::style;
 use dialoguer::{Confirmation, Input};
 use directories::ProjectDirs;
 use failure::Error;
 use mkdirp::mkdirp;
-use serde_json::{from_str, to_string};
+use serde_json;
 use std::fs::{remove_file, File};
 use std::io::prelude::*;
 use std::path::{Path, PathBuf};
 use tabular::Table;
+use chrono::NaiveDateTime;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Auth {
@@ -66,7 +68,7 @@ impl UserData {
         if let Ok(mut file) = File::open(&filepath) {
             let mut contents = String::new();
             file.read_to_string(&mut contents)?;
-            let json: Auth = from_str(&contents)?;
+            let json: Auth = serde_json::from_str(&contents)?;
             self.data = Some(json);
         }
         Ok(())
@@ -75,7 +77,7 @@ impl UserData {
     fn save(&self) -> Result<(), Error> {
         let config_dir = self.get_config_dir();
         let filepath = self.get_config_filepath();
-        let json_string = to_string(&self.data)?;
+        let json_string = serde_json::to_string(&self.data)?;
 
         mkdirp(&config_dir)?;
         let mut file = File::create(&filepath)?;
@@ -160,14 +162,23 @@ pub fn list() -> Result<(), Error> {
     if user_data.is_logged_in()? {
         let deployments = api::get_list(user_data.data.unwrap())?;
         if deployments.len() > 0 {
-            let mut table = Table::new(" {:>}  {:<}  {:<}  {:<} ");
+            let mut table = Table::new(" {:>}  {:<}  {:<}  {:<}  {:<} ");
             table.add_heading(format!(" ▲ {} ", style("Deployments").bold()));
-            table.add_row(row!["Name", "Type", "State", "URL"]);
+            table.add_row(row!["Name", "Type", "State", "Created", "URL"]);
             for deployment in deployments {
+                let now = SystemTime::now();
+                let duration_since_epoch = now.duration_since(UNIX_EPOCH)?;
+                let current_timestamp = duration_since_epoch.as_secs();
+                let current_datetime = NaiveDateTime::from_timestamp(current_timestamp as i64, 0);
+                let created = NaiveDateTime::from_timestamp(deployment.created/ 1000, 0);
+                let diff = current_datetime.signed_duration_since(created);
+                let human_diff = chrono_humanize::HumanTime::from(diff);
+                let age = human_diff.to_text_en(chrono_humanize::Accuracy::Rough, chrono_humanize::Tense::Past);
                 table.add_row(row![
                     deployment.name,
                     deployment.deployment_type,
                     deployment.state.unwrap_or(api::DeploymentState::READY),
+                    age,
                     deployment.url
                 ]);
             }

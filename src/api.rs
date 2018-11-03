@@ -97,14 +97,22 @@ impl fmt::Display for DeploymentState {
 }
 
 #[derive(Deserialize, Debug)]
+pub struct Scale {
+    current: u8,
+    min: u8,
+    max: u8,
+}
+
+#[derive(Deserialize, Debug)]
 pub struct Deployment {
     pub uid: String,
     pub name: String,
     pub url: String,
-    pub created: u64,
+    pub created: i64,
     #[serde(rename = "type")]
     pub deployment_type: DeploymentType,
     pub state: Option<DeploymentState>,
+    pub scale: Option<Scale>
 }
 
 #[derive(Deserialize, Debug)]

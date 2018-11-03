@@ -13,6 +13,8 @@ extern crate dialoguer;
 extern crate directories;
 extern crate mkdirp;
 extern crate serde_json;
+extern crate chrono;
+extern crate chrono_humanize;
 
 #[allow(non_camel_case_types)]
 mod api;

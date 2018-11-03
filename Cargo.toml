@@ -20,6 +20,8 @@ failure = "0.1.2"
 directories = "1.0.1"
 mkdirp = "0.1.0"
 tabular = "0.1.2"
+chrono = "0.4.6"
+chrono-humanize = "0.0.11"
 
 [[bin]]
 name="now"
