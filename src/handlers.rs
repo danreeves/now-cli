@@ -1,5 +1,5 @@
-use std::time::{SystemTime, UNIX_EPOCH};
 use super::api;
+use chrono::NaiveDateTime;
 use console::style;
 use dialoguer::{Confirmation, Input};
 use directories::ProjectDirs;
@@ -9,8 +9,8 @@ use serde_json;
 use std::fs::{remove_file, File};
 use std::io::prelude::*;
 use std::path::{Path, PathBuf};
+use std::time::{SystemTime, UNIX_EPOCH};
 use tabular::Table;
-use chrono::NaiveDateTime;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Auth {
@@ -170,10 +170,13 @@ pub fn list() -> Result<(), Error> {
                 let duration_since_epoch = now.duration_since(UNIX_EPOCH)?;
                 let current_timestamp = duration_since_epoch.as_secs();
                 let current_datetime = NaiveDateTime::from_timestamp(current_timestamp as i64, 0);
-                let created = NaiveDateTime::from_timestamp(deployment.created/ 1000, 0);
+                let created = NaiveDateTime::from_timestamp(deployment.created / 1000, 0);
                 let diff = current_datetime.signed_duration_since(created);
                 let human_diff = chrono_humanize::HumanTime::from(diff);
-                let age = human_diff.to_text_en(chrono_humanize::Accuracy::Rough, chrono_humanize::Tense::Past);
+                let age = human_diff.to_text_en(
+                    chrono_humanize::Accuracy::Rough,
+                    chrono_humanize::Tense::Past,
+                );
                 table.add_row(row![
                     deployment.name,
                     deployment.deployment_type,

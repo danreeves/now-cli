@@ -112,7 +112,7 @@ pub struct Deployment {
     #[serde(rename = "type")]
     pub deployment_type: DeploymentType,
     pub state: Option<DeploymentState>,
-    pub scale: Option<Scale>
+    pub scale: Option<Scale>,
 }
 
 #[derive(Deserialize, Debug)]

@@ -6,15 +6,15 @@ extern crate serde_derive;
 extern crate failure;
 #[macro_use]
 extern crate tabular;
-extern crate rprompt;
-extern crate reqwest;
+extern crate chrono;
+extern crate chrono_humanize;
 extern crate console;
 extern crate dialoguer;
 extern crate directories;
 extern crate mkdirp;
+extern crate reqwest;
+extern crate rprompt;
 extern crate serde_json;
-extern crate chrono;
-extern crate chrono_humanize;
 
 #[allow(non_camel_case_types)]
 mod api;
