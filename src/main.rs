@@ -7,6 +7,12 @@ extern crate failure;
 #[macro_use]
 extern crate tabular;
 extern crate rprompt;
+extern crate reqwest;
+extern crate console;
+extern crate dialoguer;
+extern crate directories;
+extern crate mkdirp;
+extern crate serde_json;
 
 #[allow(non_camel_case_types)]
 mod api;
